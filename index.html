@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HealEcho | Mira Melinda</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+    <style>
+        :root {
+            --primary: #d63031;
+            --accent: #6c5ce7;
+            --dark: #2d3436;
+            --light: #ffffff;
+            --success: #00b894;
+            --warning: #f1c40f;
+            --glass: rgba(255, 255, 255, 0.95);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0; background-color: #f0f2f5; color: var(--dark);
+            height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+        }
+
+        /* NAVBAR */
+        nav {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white; padding: 10px 15px; display: flex;
+            justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 2000;
+            min-height: 60px;
+        }
+        .brand { font-size: 18px; font-weight: 900; letter-spacing: 1px; }
+        .clock-container { text-align: center; line-height: 1.2; flex-grow: 1; }
+        #topDate { font-size: 10px; display: block; opacity: 0.9; text-transform: uppercase; }
+        #topClock { font-size: 14px; font-weight: 800; display: block; }
+        .nav-links { display: flex; gap: 5px; }
+        .nav-links button {
+            background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4);
+            padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer;
+            transition: 0.3s;
+        }
+        .nav-links button:hover { background: white; color: var(--primary); }
+
+        /* CONTAINER UTAMA */
+        .page { display: none; padding: 15px; flex: 1; overflow-y: auto; width: 100%; max-width: 1200px; margin: 0 auto; }
+        .active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* HERO SECTION */
+        .hero-container {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 80vh; padding: 20px 0;
+        }
+        .hero-card {
+            background: var(--glass); border-radius: 35px; padding: 40px 25px;
+            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.1); 
+            max-width: 600px; width: 100%; border: 1px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+        }
+        .hero-card h1 { font-size: 48px; color: var(--primary); margin: 0; font-weight: 900; letter-spacing: -1px; }
+        .hero-card h2 { font-size: 14px; color: var(--accent); letter-spacing: 4px; margin: 5px 0 30px; font-weight: 700; text-transform: uppercase; }
+        
+        .desc-box {
+            text-align: left; background: #fff; padding: 20px; border-radius: 20px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.02); margin-bottom: 30px;
+            border-left: 6px solid var(--primary);
+        }
+        .desc-box p { font-size: 15px; line-height: 1.6; color: #444; margin: 0 0 15px 0; }
+        .feature-list { display: grid; gap: 12px; }
+        .feature-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #555; }
+        .feature-item b { color: var(--dark); min-width: 110px; display: inline-block; }
+
+        .btn-main {
+            width: 100%; padding: 20px; background: linear-gradient(to right, var(--primary), #ff4757);
+            color: white; border: none; border-radius: 20px; font-weight: 900; font-size: 18px;
+            cursor: pointer; transition: 0.3s; box-shadow: 0 10px 25px rgba(214, 48, 49, 0.4);
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        /* DASHBOARD KORBAN */
+        .sos-container { text-align: center; margin-bottom: 20px; }
+        .sos-btn {
+            width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle, #ff4757, #b33939);
+            border: 8px solid white; color: white; font-size: 36px; font-weight: 900;
+            box-shadow: 0 0 40px rgba(214, 48, 49, 0.6); cursor: pointer;
+            animation: heartBeat 1.5s infinite; margin: 15px auto;
+        }
+        @keyframes heartBeat {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(214, 48, 49, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(214, 48, 49, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(214, 48, 49, 0); }
+        }
+
+        .input-group { background: white; padding: 15px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #666; }
+        .input-field { width: 100%; padding: 12px; border: 1.5px solid #eee; border-radius: 12px; margin-bottom: 10px; font-family: inherit; font-size: 14px; }
+        
+        .emergency-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 15px 0; }
+        .call-btn { text-decoration: none; color: white; font-size: 10px; font-weight: bold; padding: 12px 2px; border-radius: 12px; text-align: center; transition: 0.2s; }
+
+        .siren-btn {
+            width: 100%; padding: 15px; border-radius: 15px; border: none; font-weight: 800; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px; background: #2d3436; color: white;
+        }
+        .siren-active { background: var(--primary); animation: blinkSiren 0.3s infinite; }
+        @keyframes blinkSiren { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+
+        /* MAPS */
+        .map-box { height: 250px; border-radius: 25px; border: 4px solid white; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin: 15px 0; z-index: 1; }
+
+        /* MIRAMEL AI */
+        .ai-box { background: white; border-radius: 20px; padding: 15px; border: 1px solid #eee; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        #aiChat { height: 150px; overflow-y: auto; font-size: 13px; margin-bottom: 10px; padding: 5px; border-bottom: 1px solid #f0f0f0; }
+
+        /* LIST VICTIMS */
+        .victim-card {
+            background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px;
+            border-left: 8px solid var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: 0.3s;
+        }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 50px; font-size: 10px; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
+
+        /* MODAL */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 3000; padding: 20px; backdrop-filter: blur(8px); }
+        .login-card { background: white; width: 100%; max-width: 350px; border-radius: 35px; padding: 40px 30px; text-align: center; }
+        .btn-login { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 18px; font-weight: 900; cursor: pointer; }
+
+        @media (min-width: 768px) {
+            .app-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+            .map-box { height: 450px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="brand">HEALECHO <span id="adminSub" style="display:none; font-size: 10px; color: var(--warning);">(ADMIN)</span></div>
+    <div class="clock-container">
+        <span id="topDate"></span>
+        <span id="topClock"></span>
+    </div>
+    <div class="nav-links">
+        <button onclick="showPage('home')">Beranda</button>
+        <button onclick="openLogin('rescuer')">Penyelamat</button>
+        <button onclick="openLogin('admin')">Admin</button>
+    </div>
+</nav>
+
+<div id="home" class="page active">
+    <div class="hero-container">
+        <div class="hero-card">
+            <h1>HealEcho</h1>
+            <h2>By Mira Melinda</h2>
+            <div class="desc-box">
+                <p>Platform integrasi evakuasi darurat yang menghubungkan korban dan tim penyelamat secara instan.</p>
+                <div class="feature-list">
+                    <div class="feature-item"><span>🚨</span><span><b>Aktivasi Korban:</b> SOS, Suara, atau Ketukan.</span></div>
+                    <div class="feature-item"><span>🚑</span><span><b>Penyelamat:</b> Navigasi akurat & Real-time.</span></div>
+                    <div class="feature-item"><span>🖥️</span><span><b>Pusat Kendali:</b> Pantau database Firebase.</span></div>
+                </div>
+            </div>
+            <button onclick="initApp()" class="btn-main">Mulai Evakuasi Sekarang</button>
+        </div>
+    </div>
+</div>
+
+<div id="userPage" class="page">
+    <div class="app-layout">
+        <div>
+            <div class="sos-container">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <span id="vSens" style="font-size:10px; background:#fff3cd; padding:4px 12px; border-radius:50px; font-weight:bold; color: #856404;">🎙️ SENSOR AKTIF</span>
+                    <span id="batLevel" style="font-weight:900; color:var(--success);">🔋 --%</span>
+                </div>
+                <button class="sos-btn" onclick="triggerSOS('Tombol SOS')">SOS</button>
+            </div>
+            <div class="input-group">
+                <label>IDENTITAS & KONDISI</label>
+                <input type="text" id="vName" class="input-field" placeholder="Nama Lengkap">
+                <input type="tel" id="vPhone" class="input-field" placeholder="Nomor HP">
+                <select id="vCond" class="input-field" onchange="toggleCustomCond()">
+                    <option value="Bantuan Umum">Kondisi: Stabil / Umum</option>
+                    <option value="Patah Tulang">Kondisi: Patah Tulang</option>
+                    <option value="Pendarahan Hebat">Kondisi: Pendarahan Hebat</option>
+                    <option value="Terjepit Reruntuhan">Kondisi: Terjepit / Kritis</option>
+                    <option value="CUSTOM">-- Ketik Kondisi Sendiri --</option>
+                </select>
+                <input type="text" id="vCondCustom" class="input-field" style="display:none;" placeholder="Sebutkan kondisi Anda...">
+                <button id="sirenBtn" class="siren-btn" onclick="toggleSiren()">📢 NYALAKAN SIRENE LOKASI</button>
+            </div>
+            <div class="emergency-grid">
+                <a href="tel:110" class="call-btn" style="background:#2d3436;">POLISI</a>
+                <a href="tel:118" class="call-btn" style="background:#e67e22;">MEDIS</a>
+                <a href="tel:113" class="call-btn" style="background:#c0392b;">DAMKAR</a>
+                <a href="tel:115" class="call-btn" style="background:#27ae60;">SAR</a>
+            </div>
+        </div>
+        <div>
+            <div id="userMap" class="map-box"></div>
+            <div class="ai-box">
+                <h4 style="margin:0 0 10px; color:var(--accent);">🤖 MirmelAI (Asisten Medis)</h4>
+                <div id="aiChat"></div>
+                <div style="display:flex; gap:5px;">
+                    <input type="text" id="aiIn" class="input-field" style="margin-bottom:0;" placeholder="Tulis keluhan...">
+                    <button onclick="askAI()" style="background:var(--accent); color:white; border:none; padding:0 15px; border-radius:12px; cursor:pointer;">KIRIM</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="rescuerPage" class="page">
+    <h3 style="color:var(--primary); font-weight: 900;">👷 DASHBOARD OPERASI LAPANGAN</h3>
+    <div id="resList"></div>
+</div>
+
+<div id="adminPage" class="page">
+    <div class="app-layout" style="grid-template-columns: 350px 1fr;">
+        <div>
+            <h3 style="margin:0; color:var(--primary); font-weight: 900;">🖥️ PUSAT KENDALI</h3>
+            <div id="admList" style="margin:15px 0; max-height: 400px; overflow-y:auto; padding-right:5px;"></div>
+            <div style="background:var(--dark); color:#00ff00; padding:15px; border-radius:15px; font-family:monospace; font-size:11px;">
+                <div id="admLog" style="height:150px; overflow-y:auto;"></div>
+            </div>
+        </div>
+        <div id="adminMap" class="map-box" style="height: 100%; min-height: 400px;"></div>
+    </div>
+</div>
+
+<div id="loginModal" class="modal">
+    <div class="login-card">
+        <h3 id="logTitle">Login</h3>
+        <input type="password" id="passCode" class="input-field" style="text-align:center; font-size:24px;" placeholder="****">
+        <button class="btn-login" onclick="doLogin()">MASUK</button>
+        <button onclick="closeLogin()" style="background:none; border:none; color:#999; margin-top:20px;">BATAL</button>
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // --- KONFIGURASI FIREBASE ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyA02OK3KwjiFnAhJEMH11PXPa9VwtxWItg",
+        authDomain: "healechobymirmel.firebaseapp.com",
+        databaseURL: "https://healechobymirmel-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "healechobymirmel",
+        storageBucket: "healechobymirmel.firebasestorage.app",
+        messagingSenderId: "848481686732",
+        appId: "1:848481686732:web:5c25e216cfdb4767a79e69",
+        measurementId: "G-CV0W7WRY40"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let uMap, aMap, uMarker, isSiren = false, sirenInterval;
+    let loginMode = '';
+    let tapCount = 0;
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // CLOCK & BATTERY
+    setInterval(() => {
+        const d = new Date();
+        document.getElementById('topDate').innerText = d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        document.getElementById('topClock').innerText = d.toLocaleTimeString('id-ID');
+    }, 1000);
+
+    if(navigator.getBattery) {
+        navigator.getBattery().then(bat => {
+            const up = () => document.getElementById('batLevel').innerText = "🔋 " + Math.round(bat.level * 100) + "%";
+            up(); bat.onlevelchange = up;
+        });
+    }
+
+    // MAPS INIT
+    function initMaps() {
+        if(uMap) return;
+        uMap = L.map('userMap', { zoomControl: false }).setView([-6.2, 106.8], 15);
+        aMap = L.map('adminMap').setView([-6.2, 106.8], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(uMap);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(aMap);
+    }
+
+    // SOS TRIGGER
+    function triggerSOS(source) {
+        const name = document.getElementById('vName').value || "Korban Anonim";
+        const phone = document.getElementById('vPhone').value || "N/A";
+        const cond = document.getElementById('vCond').value === 'CUSTOM' ? document.getElementById('vCondCustom').value : document.getElementById('vCond').value;
+        const bat = document.getElementById('batLevel').innerText;
+
+        navigator.geolocation.getCurrentPosition(pos => {
+            const { latitude, longitude } = pos.coords;
+            const id = Date.now();
+            
+            const victimData = {
+                id, name, phone, cond, bat, 
+                lat: latitude, lng: longitude, 
+                status: "Menunggu Bantuan", 
+                time: new Date().toLocaleTimeString()
+            };
+
+            db.ref('victims/' + id).set(victimData);
+
+            if(uMarker) uMap.removeLayer(uMarker);
+            uMarker = L.marker([latitude, longitude]).addTo(uMap).bindPopup("Lokasi Saya").openPopup();
+            uMap.setView([latitude, longitude], 17);
+
+            alert(`Sinyal ${source} Berhasil Dikirim!`);
+        }, err => alert("Gagal mendapatkan lokasi. Pastikan GPS aktif."));
+    }
+
+    // --- SYNC DATA DENGAN FILTER HAPUS & SELESAI ---
+    db.ref('victims').on('value', snapshot => {
+        const data = snapshot.val();
+        // Mengubah objek menjadi array dan menyertakan KEY firebase untuk memudahkan hapus/update
+        const victimsArray = data ? Object.entries(data).map(([key, val]) => ({...val, firebaseKey: key})) : [];
+        renderVictimLists(victimsArray);
+    });
+
+    function renderVictimLists(victims) {
+        const resList = document.getElementById('resList');
+        const admList = document.getElementById('admList');
+        resList.innerHTML = ""; admList.innerHTML = "";
+
+        // Bersihkan Marker di Map Admin setiap ada update agar tidak tumpang tindih
+        if (aMap) {
+            aMap.eachLayer((layer) => { if (layer instanceof L.Marker) aMap.removeLayer(layer); });
+        }
+
+        victims.forEach(v => {
+            const gMaps = `https://www.google.com/maps?q=${v.lat},${v.lng}`;
+            const badgeColor = v.status === 'Selesai' ? 'var(--success)' : (v.status === 'Dalam Perjalanan' ? 'var(--warning)' : 'var(--primary)');
+            
+            const cardHTML = `
+                <div class="victim-card" style="border-left-color: ${badgeColor}">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <b>${v.name}</b> 
+                        <span class="status-badge" style="background:${badgeColor}; color:white;">${v.status}</span>
+                    </div>
+                    <small>${v.time} | ${v.bat}</small><br>
+                    <small>Kondisi: <b>${v.cond}</b></small>
+                    
+                    <div style="margin-top:10px; display:grid; grid-template-columns: 1fr 1fr; gap:5px;">
+                        <a href="${gMaps}" target="_blank" style="background:#2ecc71; color:white; text-decoration:none; padding:8px; border-radius:8px; font-size:11px; text-align:center; font-weight:bold;">📍 BUKA MAPS</a>
+                        ${v.status !== 'Selesai' ? `<button onclick="updateStatus('${v.firebaseKey}', 'Dalam Perjalanan')" style="background:var(--accent); color:white; border:none; border-radius:8px; font-size:11px; font-weight:bold; cursor:pointer;">🚑 TANGANI</button>` : ''}
+                    </div>
+
+                    ${v.status !== 'Selesai' ? 
+                        `<button onclick="updateStatus('${v.firebaseKey}', 'Selesai')" style="width:100%; margin-top:5px; background:var(--dark); color:white; border:none; padding:8px; border-radius:8px; font-size:11px; cursor:pointer;">✅ TANDAI SELESAI</button>` 
+                        : 
+                        `<button onclick="deleteData('${v.firebaseKey}')" style="width:100%; margin-top:5px; background:#fab1a0; color:#d63031; border:1px solid #d63031; padding:8px; border-radius:8px; font-size:11px; font-weight:bold; cursor:pointer;">🗑️ HAPUS RIWAYAT</button>`
+                    }
+                </div>`;
+
+            // Tampilan Penyelamat (Hanya yang belum selesai)
+            if (v.status !== 'Selesai') {
+                resList.innerHTML += cardHTML;
+                L.marker([v.lat, v.lng]).addTo(aMap).bindPopup(`<b>${v.name}</b><br>${v.status}`);
+            }
+            
+            // Tampilan Admin (Semua data ada di sini)
+            admList.innerHTML += cardHTML;
+        });
+    }
+
+    function updateStatus(key, newStat) {
+        db.ref('victims/' + key).update({ status: newStat });
+        addLog(`Update: ${newStat}`, '#00ff00');
+    }
+
+    function deleteData(key) {
+        if(confirm("Hapus data ini secara permanen dari database?")) {
+            db.ref('victims/' + key).remove();
+            addLog(`Data Dihapus`, '#ff4757');
+        }
+    }
+
+    function addLog(msg, color) {
+        const log = document.getElementById('admLog');
+        log.innerHTML = `<div style="color:${color}">> [${new Date().toLocaleTimeString()}] ${msg}</div>` + log.innerHTML;
+    }
+
+    // AUTH & NAVIGATION
+    function initApp() {
+        showPage('userPage');
+    }
+
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        initMaps();
+        setTimeout(() => { if(uMap) uMap.invalidateSize(); if(aMap) aMap.invalidateSize(); }, 400);
+    }
+
+    function openLogin(m) { loginMode = m; document.getElementById('loginModal').style.display = 'flex'; }
+    function closeLogin() { document.getElementById('loginModal').style.display = 'none'; }
+    function doLogin() {
+        const code = document.getElementById('passCode').value;
+        if((loginMode === 'rescuer' && code === '123') || (loginMode === 'admin' && code === '071007')) {
+            closeLogin(); showPage(loginMode + 'Page');
+            document.getElementById('passCode').value = "";
+        } else { alert("Kode Akses Salah!"); }
+    }
+
+    function toggleCustomCond() {
+        document.getElementById('vCondCustom').style.display = (document.getElementById('vCond').value === 'CUSTOM') ? 'block' : 'none';
+    }
+
+    // SIRENE
+    function toggleSiren() {
+        const btn = document.getElementById('sirenBtn');
+        if(!isSiren) {
+            isSiren = true; btn.classList.add('siren-active');
+            sirenInterval = setInterval(() => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.4);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+            }, 500);
+        } else {
+            isSiren = false; btn.classList.remove('siren-active');
+            clearInterval(sirenInterval);
+        }
+    }
+
+    // AI CHAT
+    function askAI() {
+        const input = document.getElementById('aiIn');
+        const chat = document.getElementById('aiChat');
+        const q = input.value.toLowerCase();
+        if(!q) return;
+        chat.innerHTML += `<div style="text-align:right; margin-bottom:8px;"><span style="background:var(--accent); color:white; padding:5px 12px; border-radius:15px; display:inline-block;">${input.value}</span></div>`;
+        let reply = "Bantuan sedang dalam perjalanan. Tetap tenang dan hemat baterai HP Anda.";
+        if(q.includes("patah")) reply = "Jangan gerakkan area yang patah. Gunakan kayu atau benda datar sebagai bidai sementara.";
+        if(q.includes("darah")) reply = "Tekan luka dengan kain bersih sekuat mungkin untuk menghentikan pendarahan.";
+        
+        setTimeout(() => {
+            chat.innerHTML += `<div style="background:#f1f2f6; padding:10px; border-radius:15px; margin-bottom:10px;"><b>MirmelAI:</b> ${reply}</div>`;
+            chat.scrollTop = chat.scrollHeight;
+        }, 600);
+        input.value = "";
+    }
+
+    // AUTO SOS (VOICE & TAP)
+    const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(Speech) {
+        const rec = new Speech();
+        rec.continuous = true; rec.lang = 'id-ID';
+        rec.onresult = (e) => {
+            const txt = e.results[e.results.length-1][0].transcript.toLowerCase();
+            if(txt.includes("tolong")) triggerSOS("Suara (Tolong)");
+        };
+        rec.start();
+    }
+</script>
+</body>
+</html>
