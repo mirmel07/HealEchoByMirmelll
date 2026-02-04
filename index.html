@@ -132,6 +132,16 @@
         .login-card { background: white; width: 100%; max-width: 350px; border-radius: 35px; padding: 40px 30px; text-align: center; }
         .btn-login { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 18px; font-weight: 900; cursor: pointer; }
 
+        /* EXIT BUTTON STYLE */
+        .btn-exit {
+            background: #dfe6e9 !important;
+            color: #d63031 !important;
+            border: 1px solid #d63031 !important;
+            padding: 8px 15px !important;
+            font-size: 12px !important;
+            margin-left: 10px;
+        }
+
         @media (min-width: 768px) {
             .app-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
             .map-box { height: 450px; }
@@ -217,14 +227,20 @@
 </div>
 
 <div id="rescuerPage" class="page">
-    <h3 style="color:var(--primary); font-weight: 900;">👷 DASHBOARD OPERASI LAPANGAN</h3>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="color:var(--primary); font-weight: 900;">👷 DASHBOARD OPERASI LAPANGAN</h3>
+        <button onclick="showPage('home')" class="btn-exit" style="border-radius:10px; font-weight:bold; cursor:pointer;">🚪 KELUAR</button>
+    </div>
     <div id="resList"></div>
 </div>
 
 <div id="adminPage" class="page">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h3 style="margin:0; color:var(--primary); font-weight: 900;">🖥️ PUSAT KENDALI ADMIN</h3>
+        <button onclick="showPage('home')" class="btn-exit" style="border-radius:10px; font-weight:bold; cursor:pointer;">🚪 KELUAR DASHBOARD</button>
+    </div>
     <div class="app-layout" style="grid-template-columns: 350px 1fr;">
         <div>
-            <h3 style="margin:0; color:var(--primary); font-weight: 900;">🖥️ PUSAT KENDALI</h3>
             <div id="admList" style="margin:15px 0; max-height: 400px; overflow-y:auto; padding-right:5px;"></div>
             <div style="background:var(--dark); color:#00ff00; padding:15px; border-radius:15px; font-family:monospace; font-size:11px;">
                 <div id="admLog" style="height:150px; overflow-y:auto;"></div>
@@ -335,7 +351,6 @@
             const gMaps = `https://www.google.com/maps?q=${v.lat},${v.lng}`;
             const badgeColor = v.status === 'Selesai' ? 'var(--success)' : (v.status === 'Dalam Perjalanan' ? 'var(--warning)' : 'var(--primary)');
             
-            // PERBAIKAN: Menampilkan Nomor HP dan menambahkan tombol Call
             const cardHTML = `
                 <div class="victim-card" style="border-left-color: ${badgeColor}">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
@@ -393,6 +408,12 @@
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         initMaps();
+        // Sembunyikan label Admin di Nav jika kembali ke home
+        if(id === 'home' || id === 'userPage') {
+            document.getElementById('adminSub').style.display = 'none';
+        } else if(id === 'adminPage') {
+            document.getElementById('adminSub').style.display = 'inline';
+        }
         setTimeout(() => { if(uMap) uMap.invalidateSize(); if(aMap) aMap.invalidateSize(); }, 400);
     }
 
