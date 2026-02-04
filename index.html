@@ -11,155 +11,163 @@
 
     <style>
         :root {
-            --primary: #d63031;
+            --primary: #ff4757;
             --accent: #6c5ce7;
+            --vibrant-blue: #0984e3;
+            --vibrant-orange: #ff9f43;
             --dark: #2d3436;
             --light: #ffffff;
             --success: #00b894;
             --warning: #f1c40f;
-            --glass: rgba(255, 255, 255, 0.95);
+            --glass: rgba(255, 255, 255, 0.85);
+            --gradient-main: linear-gradient(135deg, #6c5ce7, #a29bfe, #ff4757);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            margin: 0; background-color: #f0f2f5; color: var(--dark);
+            font-family: 'Poppins', 'Segoe UI', Roboto, sans-serif;
+            margin: 0; background: #f7f9fc; color: var(--dark);
             height: 100vh; display: flex; flex-direction: column; overflow: hidden;
         }
 
-        /* NAVBAR */
+        /* NAVBAR MODERN */
         nav {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white; padding: 10px 15px; display: flex;
+            background: var(--gradient-main);
+            color: white; padding: 12px 20px; display: flex;
             justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 2000;
-            min-height: 60px;
+            box-shadow: 0 4px 20px rgba(108, 92, 231, 0.3); z-index: 2000;
         }
-        .brand { font-size: 18px; font-weight: 900; letter-spacing: 1px; }
-        .clock-container { text-align: center; line-height: 1.2; flex-grow: 1; }
-        #topDate { font-size: 10px; display: block; opacity: 0.9; text-transform: uppercase; }
-        #topClock { font-size: 14px; font-weight: 800; display: block; }
-        .nav-links { display: flex; gap: 5px; }
+        .brand { font-size: 20px; font-weight: 900; letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
+        .clock-container { text-align: center; flex-grow: 1; }
+        #topDate { font-size: 9px; display: block; opacity: 0.9; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        #topClock { font-size: 16px; font-weight: 800; display: block; }
+        
+        .nav-links { display: flex; gap: 8px; }
         .nav-links button {
-            background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4);
-            padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer;
-            transition: 0.3s;
+            background: rgba(255,255,255,0.15); color: white; border: 1.5px solid rgba(255,255,255,0.3);
+            padding: 8px 14px; border-radius: 12px; font-size: 11px; font-weight: 700; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(5px);
         }
-        .nav-links button:hover { background: white; color: var(--primary); }
+        .nav-links button:hover { background: white; color: var(--accent); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
-        /* CONTAINER UTAMA */
-        .page { display: none; padding: 15px; flex: 1; overflow-y: auto; width: 100%; max-width: 1200px; margin: 0 auto; }
-        .active { display: block; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* PAGE SYSTEM */
+        .page { display: none; padding: 20px; flex: 1; overflow-y: auto; width: 100%; max-width: 1200px; margin: 0 auto; }
+        .active { display: block; animation: slideUp 0.6s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         /* HERO SECTION */
         .hero-container {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            min-height: 80vh; padding: 20px 0;
+            min-height: 85vh;
         }
         .hero-card {
-            background: var(--glass); border-radius: 35px; padding: 40px 25px;
-            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.1); 
-            max-width: 600px; width: 100%; border: 1px solid rgba(255,255,255,0.3);
-            backdrop-filter: blur(10px);
+            background: var(--glass); border-radius: 40px; padding: 45px 30px;
+            text-align: center; box-shadow: 0 25px 50px -12px rgba(108, 92, 231, 0.25); 
+            max-width: 550px; width: 100%; border: 1px solid rgba(255,255,255,0.6);
+            backdrop-filter: blur(15px);
         }
-        .hero-card h1 { font-size: 48px; color: var(--primary); margin: 0; font-weight: 900; letter-spacing: -1px; }
-        .hero-card h2 { font-size: 14px; color: var(--accent); letter-spacing: 4px; margin: 5px 0 30px; font-weight: 700; text-transform: uppercase; }
+        .hero-card h1 { font-size: 52px; background: var(--gradient-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; font-weight: 900; }
+        .hero-card h2 { font-size: 13px; color: #a29bfe; letter-spacing: 5px; margin: 10px 0 35px; font-weight: 800; text-transform: uppercase; }
         
         .desc-box {
-            text-align: left; background: #fff; padding: 20px; border-radius: 20px;
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.02); margin-bottom: 30px;
-            border-left: 6px solid var(--primary);
+            text-align: left; background: rgba(255,255,255,0.6); padding: 25px; border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03); margin-bottom: 30px;
+            border-left: 8px solid var(--accent);
         }
-        .desc-box p { font-size: 15px; line-height: 1.6; color: #444; margin: 0 0 15px 0; }
-        .feature-list { display: grid; gap: 12px; }
-        .feature-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #555; }
-        .feature-item b { color: var(--dark); min-width: 110px; display: inline-block; }
+        .feature-item { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; font-size: 14px; color: #444; }
+        .feature-item span:first-child { font-size: 20px; background: #eee; padding: 8px; border-radius: 12px; }
 
         .btn-main {
-            width: 100%; padding: 20px; background: linear-gradient(to right, var(--primary), #ff4757);
-            color: white; border: none; border-radius: 20px; font-weight: 900; font-size: 18px;
-            cursor: pointer; transition: 0.3s; box-shadow: 0 10px 25px rgba(214, 48, 49, 0.4);
+            width: 100%; padding: 22px; background: var(--gradient-main);
+            color: white; border: none; border-radius: 22px; font-weight: 800; font-size: 18px;
+            cursor: pointer; transition: 0.4s; box-shadow: 0 12px 25px rgba(108, 92, 231, 0.4);
             text-transform: uppercase; letter-spacing: 1px;
         }
+        .btn-main:hover { transform: scale(1.02); box-shadow: 0 15px 30px rgba(108, 92, 231, 0.5); }
 
-        /* DASHBOARD KORBAN */
-        .sos-container { text-align: center; margin-bottom: 20px; }
+        /* SOS BUTTON */
         .sos-btn {
-            width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle, #ff4757, #b33939);
-            border: 8px solid white; color: white; font-size: 36px; font-weight: 900;
-            box-shadow: 0 0 40px rgba(214, 48, 49, 0.6); cursor: pointer;
-            animation: heartBeat 1.5s infinite; margin: 15px auto;
+            width: 180px; height: 180px; border-radius: 50%; 
+            background: linear-gradient(145deg, #ff4757, #ff6b81);
+            border: 10px solid white; color: white; font-size: 42px; font-weight: 900;
+            box-shadow: 0 15px 45px rgba(255, 71, 87, 0.5); cursor: pointer;
+            animation: pulse-red 2s infinite; margin: 20px auto;
+            display: flex; align-items: center; justify-content: center;
         }
-        @keyframes heartBeat {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(214, 48, 49, 0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(214, 48, 49, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(214, 48, 49, 0); }
+        @keyframes pulse-red {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 25px rgba(255, 71, 87, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
         }
 
-        .input-group { background: white; padding: 15px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #666; }
-        .input-field { width: 100%; padding: 12px; border: 1.5px solid #eee; border-radius: 12px; margin-bottom: 10px; font-family: inherit; font-size: 14px; }
+        /* INPUTS & GROUPS */
+        .input-group { background: white; padding: 20px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #f0f0f0; }
+        .input-field { 
+            width: 100%; padding: 14px 18px; border: 2px solid #f1f2f6; border-radius: 16px; 
+            margin-bottom: 12px; font-family: inherit; font-size: 14px; transition: 0.3s;
+            background: #f9f9fb;
+        }
+        .input-field:focus { border-color: var(--accent); outline: none; background: white; }
         
-        .emergency-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 15px 0; }
-        .call-btn { text-decoration: none; color: white; font-size: 10px; font-weight: bold; padding: 12px 2px; border-radius: 12px; text-align: center; transition: 0.2s; }
-
-        .siren-btn {
-            width: 100%; padding: 15px; border-radius: 15px; border: none; font-weight: 800; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 10px; background: #2d3436; color: white;
+        /* EMERGENCY CALLS */
+        .emergency-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+        .call-btn { 
+            text-decoration: none; color: white; font-size: 12px; font-weight: 800; 
+            padding: 15px; border-radius: 18px; text-align: center; transition: 0.3s;
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
         }
-        .siren-active { background: var(--primary); animation: blinkSiren 0.3s infinite; }
-        @keyframes blinkSiren { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+        .call-btn:hover { filter: brightness(1.1); transform: translateY(-3px); }
 
-        /* MAPS */
-        .map-box { height: 250px; border-radius: 25px; border: 4px solid white; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin: 15px 0; z-index: 1; }
-
-        /* MIRAMEL AI */
-        .ai-box { background: white; border-radius: 20px; padding: 15px; border: 1px solid #eee; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        #aiChat { height: 150px; overflow-y: auto; font-size: 13px; margin-bottom: 10px; padding: 5px; border-bottom: 1px solid #f0f0f0; }
-
-        /* LIST VICTIMS */
+        /* LISTS */
         .victim-card {
-            background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px;
-            border-left: 8px solid var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            transition: 0.3s;
+            background: white; border-radius: 25px; padding: 20px; margin-bottom: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #f0f0f0;
+            position: relative; overflow: hidden;
         }
-        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 50px; font-size: 10px; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
+        .victim-card::after {
+            content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 6px; background: var(--primary);
+        }
+
+        .ai-box { 
+            background: linear-gradient(135deg, #ffffff, #f1f2f6); 
+            border-radius: 25px; padding: 20px; border: 1.5px solid white;
+            box-shadow: 0 15px 30px rgba(108, 92, 231, 0.1); 
+        }
+
+        .map-box { 
+            height: 280px; border-radius: 30px; border: 6px solid white; 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1); margin: 20px 0; overflow: hidden;
+        }
 
         /* MODAL */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 3000; padding: 20px; backdrop-filter: blur(8px); }
-        .login-card { background: white; width: 100%; max-width: 350px; border-radius: 35px; padding: 40px 30px; text-align: center; }
-        .btn-login { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 18px; font-weight: 900; cursor: pointer; }
-
-        /* EXIT BUTTON STYLE */
-        .btn-exit {
-            background: #dfe6e9 !important;
-            color: #d63031 !important;
-            border: 1px solid #d63031 !important;
-            padding: 8px 15px !important;
-            font-size: 12px !important;
-            margin-left: 10px;
-        }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(45, 52, 54, 0.8); display: none; justify-content: center; align-items: center; z-index: 3000; backdrop-filter: blur(10px); }
+        .login-card { background: white; width: 90%; max-width: 380px; border-radius: 40px; padding: 45px 35px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.3); }
 
         @media (min-width: 768px) {
-            .app-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-            .map-box { height: 450px; }
+            .app-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+            .map-box { height: 100%; min-height: 500px; }
         }
+
+        /* TAB STYLE FOR ADMIN */
+        .admin-tabs { display: flex; gap: 10px; margin-bottom: 15px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; background: #eee; }
+        .tab-btn.active-tab { background: var(--accent); color: white; }
     </style>
 </head>
 <body>
 
 <nav>
-    <div class="brand">HEALECHO <span id="adminSub" style="display:none; font-size: 10px; color: var(--warning);">(ADMIN)</span></div>
+    <div class="brand">HEALECHO <span id="adminSub" style="display:none; font-size: 11px; color: var(--warning); background: rgba(0,0,0,0.2); padding: 2px 8px; border-radius: 5px;">ADMIN</span></div>
     <div class="clock-container">
         <span id="topDate"></span>
         <span id="topClock"></span>
     </div>
     <div class="nav-links">
-        <button onclick="showPage('home')">Beranda</button>
-        <button onclick="openLogin('rescuer')">Penyelamat</button>
-        <button onclick="openLogin('admin')">Admin</button>
+        <button onclick="showPage('home')">BERANDA</button>
+        <button onclick="openLogin('rescuer')">RESCUE</button>
+        <button onclick="openLogin('admin')">ADMIN</button>
     </div>
 </nav>
 
@@ -169,14 +177,14 @@
             <h1>HealEcho</h1>
             <h2>By Mira Melinda</h2>
             <div class="desc-box">
-                <p>Platform integrasi evakuasi darurat yang menghubungkan korban dan tim penyelamat secara instan.</p>
+                <p style="font-weight: 600; color: var(--accent); margin-top:0;">Satu Sinyal, Beribu Harapan.</p>
                 <div class="feature-list">
-                    <div class="feature-item"><span>🚨</span><span><b>Aktivasi Korban:</b> SOS, Suara, atau Ketukan.</span></div>
-                    <div class="feature-item"><span>🚑</span><span><b>Penyelamat:</b> Navigasi akurat & Real-time.</span></div>
-                    <div class="feature-item"><span>🖥️</span><span><b>Pusat Kendali:</b> Pantau database Firebase.</span></div>
+                    <div class="feature-item"><span>🚨</span><span><b>SOS Pintar:</b> Kirim lokasi & kondisi medis.</span></div>
+                    <div class="feature-item"><span>🔊</span><span><b>Aktivasi Suara:</b> Teriak "TOLONG" untuk pemicu.</span></div>
+                    <div class="feature-item"><span>🤖</span><span><b>MirmelAI:</b> Panduan medis darurat instan.</span></div>
                 </div>
             </div>
-            <button onclick="initApp()" class="btn-main">Mulai Evakuasi Sekarang</button>
+            <button onclick="initApp()" class="btn-main">MULAI EVAKUASI</button>
         </div>
     </div>
 </div>
@@ -185,41 +193,48 @@
     <div class="app-layout">
         <div>
             <div class="sos-container">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <span id="vSens" style="font-size:10px; background:#fff3cd; padding:4px 12px; border-radius:50px; font-weight:bold; color: #856404;">🎙️ SENSOR AKTIF</span>
-                    <span id="batLevel" style="font-weight:900; color:var(--success);">🔋 --%</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <span id="vSens" style="font-size:11px; background:#fff; border: 2px solid #ffcc00; padding:6px 15px; border-radius:50px; font-weight:bold; color: #d4a017;">🎙️ VOICE ACTIVE</span>
+                    <span id="batLevel" style="font-weight:900; color:var(--success); background: white; padding: 6px 15px; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">🔋 --%</span>
                 </div>
                 <button class="sos-btn" onclick="triggerSOS('Tombol SOS')">SOS</button>
             </div>
+            
             <div class="input-group">
-                <label>IDENTITAS & KONDISI</label>
+                <label style="display:block; font-weight:800; font-size:11px; color: var(--accent); margin-bottom:10px; letter-spacing: 1px;">INFORMASI KORBAN</label>
                 <input type="text" id="vName" class="input-field" placeholder="Nama Lengkap">
-                <input type="tel" id="vPhone" class="input-field" placeholder="Nomor HP">
-                <select id="vCond" class="input-field" onchange="toggleCustomCond()">
+                <input type="tel" id="vPhone" class="input-field" placeholder="Nomor WhatsApp (Aktif)">
+                <select id="vCond" class="input-field" onchange="toggleCustomCond()" style="appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236c5ce7%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22/%3E%3C/svg%3E'); background-repeat: no-repeat; background-position: right 15px top 50%; background-size: 12px auto;">
                     <option value="Bantuan Umum">Kondisi: Stabil / Umum</option>
                     <option value="Patah Tulang">Kondisi: Patah Tulang</option>
                     <option value="Pendarahan Hebat">Kondisi: Pendarahan Hebat</option>
                     <option value="Terjepit Reruntuhan">Kondisi: Terjepit / Kritis</option>
+                    <option value="Sesak Napas">Kondisi: Sesak Napas / Asma</option>
                     <option value="CUSTOM">-- Ketik Kondisi Sendiri --</option>
                 </select>
-                <input type="text" id="vCondCustom" class="input-field" style="display:none;" placeholder="Sebutkan kondisi Anda...">
-                <button id="sirenBtn" class="siren-btn" onclick="toggleSiren()">📢 NYALAKAN SIRENE LOKASI</button>
+                <input type="text" id="vCondCustom" class="input-field" style="display:none;" placeholder="Detail kondisi Anda...">
+                <button id="sirenBtn" class="btn-main" style="padding: 15px; font-size: 14px; background: var(--dark); margin-top: 10px;" onclick="toggleSiren()">🔊 NYALAKAN SIRENE LOKASI</button>
             </div>
+
             <div class="emergency-grid">
-                <a href="tel:110" class="call-btn" style="background:#2d3436;">POLISI</a>
-                <a href="tel:118" class="call-btn" style="background:#e67e22;">MEDIS</a>
-                <a href="tel:113" class="call-btn" style="background:#c0392b;">DAMKAR</a>
-                <a href="tel:115" class="call-btn" style="background:#27ae60;">SAR</a>
+                <a href="tel:110" class="call-btn" style="background:var(--vibrant-blue);"><span>👮</span>POLISI</a>
+                <a href="tel:118" class="call-btn" style="background:var(--primary);"><span>🚑</span>MEDIS</a>
+                <a href="tel:113" class="call-btn" style="background:var(--vibrant-orange);"><span>🚒</span>DAMKAR</a>
+                <a href="tel:115" class="call-btn" style="background:var(--success);"><span>🚁</span>SAR</a>
             </div>
         </div>
+        
         <div>
             <div id="userMap" class="map-box"></div>
             <div class="ai-box">
-                <h4 style="margin:0 0 10px; color:var(--accent);">🤖 MirmelAI (Asisten Medis)</h4>
-                <div id="aiChat"></div>
-                <div style="display:flex; gap:5px;">
-                    <input type="text" id="aiIn" class="input-field" style="margin-bottom:0;" placeholder="Tulis keluhan...">
-                    <button onclick="askAI()" style="background:var(--accent); color:white; border:none; padding:0 15px; border-radius:12px; cursor:pointer;">KIRIM</button>
+                <h4 style="margin:0 0 15px; color:var(--accent); display:flex; align-items:center; gap:8px;">
+                    <span style="background:var(--accent); color:white; padding:5px; border-radius:8px;">🤖</span> 
+                    MirmelAI Asisten
+                </h4>
+                <div id="aiChat" style="height: 180px; overflow-y: auto; font-size: 13px; padding-right: 5px;"></div>
+                <div style="display:flex; gap:10px; margin-top:15px;">
+                    <input type="text" id="aiIn" class="input-field" style="margin-bottom:0;" placeholder="Tanya bantuan medis...">
+                    <button onclick="askAI()" style="background:var(--accent); color:white; border:none; padding:0 20px; border-radius:16px; cursor:pointer; font-weight:bold;">KIRIM</button>
                 </div>
             </div>
         </div>
@@ -227,35 +242,43 @@
 </div>
 
 <div id="rescuerPage" class="page">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="color:var(--primary); font-weight: 900;">👷 DASHBOARD OPERASI LAPANGAN</h3>
-        <button onclick="showPage('home')" class="btn-exit" style="border-radius:10px; font-weight:bold; cursor:pointer;">🚪 KELUAR</button>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+        <h3 style="color:var(--accent); font-weight: 900; margin:0;">👷 DASHBOARD RESCUE</h3>
+        <button onclick="showPage('home')" class="nav-links" style="background:var(--primary); color:white; border:none; padding:10px 20px; border-radius:15px; font-weight:bold;">KELUAR</button>
     </div>
     <div id="resList"></div>
 </div>
 
 <div id="adminPage" class="page">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-        <h3 style="margin:0; color:var(--primary); font-weight: 900;">🖥️ PUSAT KENDALI ADMIN</h3>
-        <button onclick="showPage('home')" class="btn-exit" style="border-radius:10px; font-weight:bold; cursor:pointer;">🚪 KELUAR DASHBOARD</button>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h3 style="margin:0; color:var(--dark); font-weight: 900;">🖥️ COMMAND CENTER</h3>
+        <button onclick="showPage('home')" style="background:var(--dark); color:white; border:none; padding:10px 20px; border-radius:15px; font-weight:bold; cursor:pointer;">LOGOUT</button>
     </div>
-    <div class="app-layout" style="grid-template-columns: 350px 1fr;">
+
+    <div class="admin-tabs">
+        <button id="tabActive" class="tab-btn active-tab" onclick="switchAdminTab('active')">🆘 DARURAT AKTIF</button>
+        <button id="tabHistory" class="tab-btn" onclick="switchAdminTab('history')">✅ RIWAYAT EVAKUASI</button>
+    </div>
+
+    <div class="app-layout" style="grid-template-columns: 400px 1fr;">
         <div>
-            <div id="admList" style="margin:15px 0; max-height: 400px; overflow-y:auto; padding-right:5px;"></div>
-            <div style="background:var(--dark); color:#00ff00; padding:15px; border-radius:15px; font-family:monospace; font-size:11px;">
-                <div id="admLog" style="height:150px; overflow-y:auto;"></div>
+            <div id="admList" style="max-height: 500px; overflow-y:auto; padding-right:10px;"></div>
+            <div style="background: #1e272e; color:#00d8d6; padding:20px; border-radius:25px; font-family: 'Courier New', monospace; font-size:12px; margin-top:20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <div style="border-bottom: 1px solid #34495e; padding-bottom: 5px; margin-bottom: 10px; font-weight: bold;">SYSTEM LOGS</div>
+                <div id="admLog" style="height:120px; overflow-y:auto;"></div>
             </div>
         </div>
-        <div id="adminMap" class="map-box" style="height: 100%; min-height: 400px;"></div>
+        <div id="adminMap" class="map-box" style="height: 100%; min-height: 500px;"></div>
     </div>
 </div>
 
 <div id="loginModal" class="modal">
     <div class="login-card">
-        <h3 id="logTitle">Login</h3>
-        <input type="password" id="passCode" class="input-field" style="text-align:center; font-size:24px;" placeholder="****">
-        <button class="btn-login" onclick="doLogin()">MASUK</button>
-        <button onclick="closeLogin()" style="background:none; border:none; color:#999; margin-top:20px;">BATAL</button>
+        <div style="font-size: 40px; margin-bottom: 10px;">🔐</div>
+        <h3 id="logTitle" style="margin-bottom: 25px; color: var(--dark);">Akses Terbatas</h3>
+        <input type="password" id="passCode" class="input-field" style="text-align:center; font-size:28px; letter-spacing: 5px;" placeholder="••••">
+        <button class="btn-main" onclick="doLogin()">VERIFIKASI</button>
+        <button onclick="closeLogin()" style="background:none; border:none; color:#a29bfe; margin-top:20px; font-weight: bold; cursor:pointer;">KEMBALI</button>
     </div>
 </div>
 
@@ -278,6 +301,7 @@
 
     let uMap, aMap, uMarker, isSiren = false, sirenInterval;
     let loginMode = '';
+    let currentAdminTab = 'active'; 
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
     // CLOCK & BATTERY
@@ -289,7 +313,14 @@
 
     if(navigator.getBattery) {
         navigator.getBattery().then(bat => {
-            const up = () => document.getElementById('batLevel').innerText = "🔋 " + Math.round(bat.level * 100) + "%";
+            const up = () => {
+                const lvl = Math.round(bat.level * 100);
+                const el = document.getElementById('batLevel');
+                if(el) {
+                    el.innerText = "🔋 " + lvl + "%";
+                    el.style.color = lvl < 20 ? 'var(--primary)' : 'var(--success)';
+                }
+            };
             up(); bat.onlevelchange = up;
         });
     }
@@ -305,9 +336,14 @@
 
     // SOS TRIGGER
     function triggerSOS(source) {
-        const name = document.getElementById('vName').value || "Korban Anonim";
-        const phone = document.getElementById('vPhone').value || "Tidak Ada Nomor";
-        const cond = document.getElementById('vCond').value === 'CUSTOM' ? document.getElementById('vCondCustom').value : document.getElementById('vCond').value;
+        const nameEl = document.getElementById('vName');
+        const phoneEl = document.getElementById('vPhone');
+        const condEl = document.getElementById('vCond');
+        const customCondEl = document.getElementById('vCondCustom');
+        
+        const name = nameEl.value || "Korban Anonim";
+        const phone = phoneEl.value || "";
+        const cond = condEl.value === 'CUSTOM' ? customCondEl.value : condEl.value;
         const bat = document.getElementById('batLevel').innerText;
 
         navigator.geolocation.getCurrentPosition(pos => {
@@ -318,89 +354,125 @@
                 id, name, phone, cond, bat, 
                 lat: latitude, lng: longitude, 
                 status: "Menunggu Bantuan", 
-                time: new Date().toLocaleTimeString()
+                time: new Date().toLocaleTimeString(),
+                date: new Date().toLocaleDateString()
             };
 
             db.ref('victims/' + id).set(victimData);
 
             if(uMarker) uMap.removeLayer(uMarker);
-            uMarker = L.marker([latitude, longitude]).addTo(uMap).bindPopup("Lokasi Saya").openPopup();
+            uMarker = L.marker([latitude, longitude]).addTo(uMap).bindPopup("Lokasi Terdeteksi").openPopup();
             uMap.setView([latitude, longitude], 17);
 
-            alert(`Sinyal ${source} Berhasil Dikirim!`);
-        }, err => alert("Gagal mendapatkan lokasi. Pastikan GPS aktif."));
+            alert(`🚨 SINYAL DARURAT DIKIRIM!\nTetap tenang, bantuan sedang diproses.`);
+            
+            nameEl.value = ""; phoneEl.value = ""; condEl.value = "Bantuan Umum"; customCondEl.value = ""; customCondEl.style.display = "none";
+        }, err => alert("Gagal mendapatkan lokasi. Aktifkan GPS!"));
     }
 
-    // --- SYNC DATA ---
-    db.ref('victims').on('value', snapshot => {
-        const data = snapshot.val();
-        const victimsArray = data ? Object.entries(data).map(([key, val]) => ({...val, firebaseKey: key})) : [];
-        renderVictimLists(victimsArray);
-    });
+    // --- SYNC DATA REALTIME ---
+    db.ref('victims').on('value', snapshot => { if (currentAdminTab === 'active') syncDisplay(); });
+    db.ref('history').on('value', snapshot => { if (currentAdminTab === 'history') syncDisplay(); });
+
+    function syncDisplay() {
+        const path = currentAdminTab === 'active' ? 'victims' : 'history';
+        db.ref(path).once('value', snapshot => {
+            const data = snapshot.val();
+            const victimsArray = data ? Object.entries(data).map(([key, val]) => ({...val, firebaseKey: key})) : [];
+            renderVictimLists(victimsArray);
+        });
+    }
 
     function renderVictimLists(victims) {
         const resList = document.getElementById('resList');
         const admList = document.getElementById('admList');
         resList.innerHTML = ""; admList.innerHTML = "";
 
-        if (aMap) {
-            aMap.eachLayer((layer) => { if (layer instanceof L.Marker) aMap.removeLayer(layer); });
-        }
+        if (aMap) { aMap.eachLayer((layer) => { if (layer instanceof L.Marker) aMap.removeLayer(layer); }); }
 
         victims.forEach(v => {
             const gMaps = `https://www.google.com/maps?q=${v.lat},${v.lng}`;
-            const badgeColor = v.status === 'Selesai' ? 'var(--success)' : (v.status === 'Dalam Perjalanan' ? 'var(--warning)' : 'var(--primary)');
+            const badgeColor = v.status === 'Selesai' ? 'var(--success)' : (v.status === 'Dalam Perjalanan' ? 'var(--vibrant-orange)' : 'var(--primary)');
             
+            // TOMBOL HUBUNGI
+            const phoneAction = v.phone ? `<a href="tel:${v.phone}" style="background:var(--success); color:white; text-decoration:none; padding:12px; border-radius:15px; font-size:11px; text-align:center; font-weight:bold;">📞 HUBUNGI</a>` : `<button disabled style="background:#ccc; color:white; border:none; border-radius:15px; font-size:11px; font-weight:bold; opacity:0.5;">🚫 NO HP KOSONG</button>`;
+
             const cardHTML = `
-                <div class="victim-card" style="border-left-color: ${badgeColor}">
+                <div class="victim-card" style="border-left: 8px solid ${badgeColor}">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                         <div>
-                            <b style="font-size:16px;">${v.name}</b><br>
-                            <span style="color:var(--accent); font-weight:bold; font-size:13px;">📞 ${v.phone}</span>
+                            <b style="font-size:18px; color:var(--dark)">${v.name}</b><br>
+                            <span style="color:var(--accent); font-weight:800; font-size:14px;">☎️ ${v.phone || 'N/A'}</span>
                         </div>
-                        <span class="status-badge" style="background:${badgeColor}; color:white;">${v.status}</span>
+                        <span style="background:${badgeColor}; color:white; padding:5px 12px; border-radius:50px; font-size:10px; font-weight:bold; text-transform:uppercase;">${v.status}</span>
                     </div>
-                    <div style="margin: 5px 0;">
-                        <small>${v.time} | ${v.bat}</small><br>
-                        <small>Kondisi: <b style="color:var(--primary)">${v.cond}</b></small>
+                    <div style="margin: 12px 0; font-size: 13px; color: #666; background: #f9f9fb; padding: 10px; border-radius: 12px;">
+                        <div>🕒 <b>Waktu:</b> ${v.time} | ${v.bat}</div>
+                        <div>🚑 <b>Kondisi:</b> <span style="color:var(--primary); font-weight:bold;">${v.cond}</span></div>
                     </div>
                     
-                    <div style="margin-top:10px; display:grid; grid-template-columns: 1fr 1fr 1fr; gap:5px;">
-                        <a href="${gMaps}" target="_blank" style="background:#2ecc71; color:white; text-decoration:none; padding:8px; border-radius:8px; font-size:10px; text-align:center; font-weight:bold;">📍 MAPS</a>
-                        <a href="tel:${v.phone}" style="background:var(--dark); color:white; text-decoration:none; padding:8px; border-radius:8px; font-size:10px; text-align:center; font-weight:bold;">📞 HUBUNGI</a>
-                        ${v.status !== 'Selesai' ? `<button onclick="updateStatus('${v.firebaseKey}', 'Dalam Perjalanan')" style="background:var(--accent); color:white; border:none; border-radius:8px; font-size:10px; font-weight:bold; cursor:pointer;">🚑 TANGANI</button>` : '<button disabled style="opacity:0.5; font-size:10px; border-radius:8px;">OK</button>'}
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:15px;">
+                        <a href="${gMaps}" target="_blank" style="background:var(--vibrant-blue); color:white; text-decoration:none; padding:12px; border-radius:15px; font-size:11px; text-align:center; font-weight:bold;">📍 BUKA MAPS</a>
+                        ${phoneAction}
+                        
+                        ${currentAdminTab === 'active' ? `
+                            ${v.status === 'Menunggu Bantuan' ? `<button onclick="updateStatus('${v.firebaseKey}', 'Dalam Perjalanan')" style="grid-column: span 2; background:var(--accent); color:white; border:none; padding:12px; border-radius:15px; font-size:11px; font-weight:bold; cursor:pointer;">🚑 TANGANI SEKARANG</button>` : ''}
+                            ${v.status === 'Dalam Perjalanan' ? `<button onclick="updateStatus('${v.firebaseKey}', 'Selesai')" style="grid-column: span 2; background:var(--success); color:white; border:none; padding:12px; border-radius:15px; font-size:11px; font-weight:bold; cursor:pointer;">✅ SELESAIKAN EVAKUASI</button>` : ''}
+                            ${v.status === 'Selesai' ? `<button onclick="moveToHistory('${v.firebaseKey}')" style="grid-column: span 2; background:#ffeaa7; color:#d63031; border:none; padding:12px; border-radius:15px; font-size:11px; font-weight:bold; cursor:pointer;">📥 PINDAH KE RIWAYAT</button>` : ''}
+                        ` : `
+                            <button onclick="deletePermanently('${v.firebaseKey}')" style="grid-column: span 2; background:var(--primary); color:white; border:none; padding:12px; border-radius:15px; font-size:11px; font-weight:bold; cursor:pointer;">🗑️ HAPUS PERMANEN DARI RIWAYAT</button>
+                        `}
                     </div>
-
-                    ${v.status !== 'Selesai' ? 
-                        `<button onclick="updateStatus('${v.firebaseKey}', 'Selesai')" style="width:100%; margin-top:5px; background:#2d3436; color:white; border:none; padding:8px; border-radius:8px; font-size:11px; cursor:pointer;">✅ TANDAI SELESAI</button>` 
-                        : 
-                        `<button onclick="deleteData('${v.firebaseKey}')" style="width:100%; margin-top:5px; background:#fab1a0; color:#d63031; border:1px solid #d63031; padding:8px; border-radius:8px; font-size:11px; font-weight:bold; cursor:pointer;">🗑️ HAPUS RIWAYAT</button>`
-                    }
                 </div>`;
 
-            if (v.status !== 'Selesai') {
-                resList.innerHTML += cardHTML;
-                L.marker([v.lat, v.lng]).addTo(aMap).bindPopup(`<b>${v.name}</b><br>${v.phone}<br>${v.status}`);
+            if (currentAdminTab === 'active') {
+                if (v.status !== 'Selesai') resList.innerHTML += cardHTML;
+                admList.innerHTML += cardHTML;
+                L.marker([v.lat, v.lng]).addTo(aMap).bindPopup(`<b>${v.name}</b><br>${v.status}`);
+            } else {
+                admList.innerHTML += cardHTML;
             }
-            admList.innerHTML += cardHTML;
         });
+    }
+
+    // FUNGSI HAPUS PERMANEN (Mira Melinda Req)
+    function deletePermanently(key) {
+        if(confirm("Apakah Anda yakin ingin menghapus data ini selamanya dari riwayat? Tindakan ini tidak bisa dibatalkan.")) {
+            db.ref('history/' + key).remove().then(() => {
+                addLog(`Data dihapus permanen`, '#ff4757');
+                syncDisplay();
+            });
+        }
     }
 
     function updateStatus(key, newStat) {
         db.ref('victims/' + key).update({ status: newStat });
-        addLog(`Update: ${newStat}`, '#00ff00');
+        addLog(`Update Status: ${newStat}`, '#00d8d6');
     }
 
-    function deleteData(key) {
-        if(confirm("Hapus data ini secara permanen dari database?")) {
-            db.ref('victims/' + key).remove();
-            addLog(`Data Dihapus`, '#ff4757');
+    function moveToHistory(key) {
+        if(confirm("Data akan dipindahkan ke riwayat.")) {
+            db.ref('victims/' + key).once('value', snapshot => {
+                const data = snapshot.val();
+                db.ref('history/' + key).set(data).then(() => {
+                    db.ref('victims/' + key).remove();
+                    addLog(`Data dipindahkan ke Riwayat`, '#00b894');
+                    syncDisplay();
+                });
+            });
         }
+    }
+
+    function switchAdminTab(tab) {
+        currentAdminTab = tab;
+        document.getElementById('tabActive').classList.toggle('active-tab', tab === 'active');
+        document.getElementById('tabHistory').classList.toggle('active-tab', tab === 'history');
+        syncDisplay();
     }
 
     function addLog(msg, color) {
         const log = document.getElementById('admLog');
-        log.innerHTML = `<div style="color:${color}">> [${new Date().toLocaleTimeString()}] ${msg}</div>` + log.innerHTML;
+        if(log) log.innerHTML = `<div style="color:${color}; margin-bottom:5px;">> [${new Date().toLocaleTimeString()}] ${msg}</div>` + log.innerHTML;
     }
 
     function initApp() { showPage('userPage'); }
@@ -408,11 +480,11 @@
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         initMaps();
-        // Sembunyikan label Admin di Nav jika kembali ke home
         if(id === 'home' || id === 'userPage') {
             document.getElementById('adminSub').style.display = 'none';
         } else if(id === 'adminPage') {
             document.getElementById('adminSub').style.display = 'inline';
+            syncDisplay();
         }
         setTimeout(() => { if(uMap) uMap.invalidateSize(); if(aMap) aMap.invalidateSize(); }, 400);
     }
@@ -427,26 +499,24 @@
         } else { alert("Kode Akses Salah!"); }
     }
 
-    function toggleCustomCond() {
-        document.getElementById('vCondCustom').style.display = (document.getElementById('vCond').value === 'CUSTOM') ? 'block' : 'none';
-    }
+    function toggleCustomCond() { document.getElementById('vCondCustom').style.display = (document.getElementById('vCond').value === 'CUSTOM') ? 'block' : 'none'; }
 
     function toggleSiren() {
         const btn = document.getElementById('sirenBtn');
         if(!isSiren) {
-            isSiren = true; btn.classList.add('siren-active');
+            isSiren = true; btn.style.background = 'var(--primary)'; btn.innerText = "🛑 MATIKAN SIRENE";
             sirenInterval = setInterval(() => {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.connect(gain); gain.connect(audioCtx.destination);
                 osc.type = 'square';
-                osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.4);
-                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.4);
-            }, 500);
+                osc.frequency.setValueAtTime(1000, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime + 0.3);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+            }, 600);
         } else {
-            isSiren = false; btn.classList.remove('siren-active');
+            isSiren = false; btn.style.background = 'var(--dark)'; btn.innerText = "🔊 NYALAKAN SIRENE LOKASI";
             clearInterval(sirenInterval);
         }
     }
@@ -456,13 +526,16 @@
         const chat = document.getElementById('aiChat');
         const q = input.value.toLowerCase();
         if(!q) return;
-        chat.innerHTML += `<div style="text-align:right; margin-bottom:8px;"><span style="background:var(--accent); color:white; padding:5px 12px; border-radius:15px; display:inline-block;">${input.value}</span></div>`;
-        let reply = "Bantuan sedang dalam perjalanan. Tetap tenang dan hemat baterai HP Anda.";
-        if(q.includes("patah")) reply = "Jangan gerakkan area yang patah. Gunakan kayu atau benda datar sebagai bidai sementara.";
-        if(q.includes("darah")) reply = "Tekan luka dengan kain bersih sekuat mungkin untuk menghentikan pendarahan.";
+        chat.innerHTML += `<div style="text-align:right; margin-bottom:12px;"><span style="background:var(--accent); color:white; padding:8px 15px; border-radius:18px 18px 0 18px; display:inline-block; box-shadow: 0 4px 10px rgba(108, 92, 231, 0.2);">${input.value}</span></div>`;
+        
+        let reply = "Saya memahami kondisi Anda. Tim medis telah menerima koordinat Anda. Harap tetap tenang dan atur napas.";
+        if(q.includes("patah")) reply = "Jangan gerakkan bagian yang patah. Cari benda kaku seperti kayu untuk menyangga (bidai) sementara agar tulang tidak bergeser.";
+        if(q.includes("darah")) reply = "Gunakan kain bersih dan tekan kuat-kuat pada area luka. Jangan lepaskan tekanan sampai bantuan tiba.";
+        if(q.includes("sesak") || q.includes("napas")) reply = "Duduk tegak, longgarkan pakaian yang ketat, dan cobalah bernapas pelan melalui hidung. Jangan panik.";
+        if(q.includes("jepit") || q.includes("runtuh")) reply = "Hemat oksigen Anda. Jangan berteriak terus-menerus, gunakan benda di sekitar untuk memukul benda keras agar tim penyelamat mendengar suara Anda.";
         
         setTimeout(() => {
-            chat.innerHTML += `<div style="background:#f1f2f6; padding:10px; border-radius:15px; margin-bottom:10px;"><b>MirmelAI:</b> ${reply}</div>`;
+            chat.innerHTML += `<div style="background:white; padding:12px; border-radius:0 18px 18px 18px; margin-bottom:15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-left: 4px solid var(--accent);"><b>MirmelAI:</b> ${reply}</div>`;
             chat.scrollTop = chat.scrollHeight;
         }, 600);
         input.value = "";
@@ -474,7 +547,7 @@
         rec.continuous = true; rec.lang = 'id-ID';
         rec.onresult = (e) => {
             const txt = e.results[e.results.length-1][0].transcript.toLowerCase();
-            if(txt.includes("tolong")) triggerSOS("Suara (Tolong)");
+            if(txt.includes("tolong")) triggerSOS("Suara Terdeteksi");
         };
         rec.start();
     }
